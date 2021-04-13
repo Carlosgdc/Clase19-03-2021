@@ -4,31 +4,40 @@
 //
 //  Created by Countyfoot on 4/12/21.
 //
-// En este programa estudiaremos el alcance que tienen las variables.
+// En este programa estudiaremos el traspaso de valor y copiar por referencia una variable
 
-#include <iostream> // Comenzamos añadiendo las librerias.
+#include <iostream>
 
-const int a = 20; // Esta es una variable global, ya que se encuentra fuera de cualquier función.
-// En este caso escribimos que esta variable era constante, un mal habito de programación es escribir una variable global que pueda ser modificable.
+int add1(int a, int b);
+int add2(int a, int & c); // a es una copia del valor, estamos realizando un traspaso del valor de a, mientras que c es una referencia/homonimo. Al hacer esto, no se esta creando una nueva variable si no que se toma como referencia la variable ya escrita de la otra función, es decir, int b.
 
-void print_message(int a);
-
-// El operador de resolución de alcance consiste en la notación "::" y luego una variable.
-// Lo que realiza este operador es que el computador entienda que no nos referimos a la variable local en la función, si no por el contrario, nos referimos a la variable global.
-
-int main(void)
+int main(int argc, char *argv[])
 {
-    int a = 12; // Declaramos e inicializamos una variable con el mismo nombre y tipo que nuestra variable global.
+    int a = 12;
+    int b = -10;
+
     std::cout << "Direccion de a en main: " << &a << std::endl;
-    std::cout << "Direccion de a global en main: " << &::a << std::endl;
-    print_message(a);
+    std::cout << "Direccion de b en main: " << &b << std::endl;
+    std::cout << add1(a, b) << "\n";
+    std::cout << "Valor de b en main: " << b << std::endl;
+    std::cout << add2(a, b) << "\n";
+    std::cout << "Valor de b en main: " << b << std::endl;
     return 0;
 }
 
-void print_message(int a) // El valor de esta variable es 12 debido a que en la función main se encuentra añadida esta función, por lo cual dentro de la función print_message esta variable es diferente a las otras dos pero con el mismo valor que la variable de la función main.
+int add1(int a, int b)
 {
-    std::cout << "Hello world!\n";
-    std::cout << "Parametro a: " << a << "\n";
-    std::cout << "Direccion de a en print: " << &a << std::endl;
+    int r = a + b;
+    std::cout << "Direccion de a local en addition copy: " << &a << std::endl;
+    std::cout << "Direccion de b local en addition copy: " << &b << std::endl;
+    return r;
 }
-// Al ejecutar este programa con la instrucción &a podemos observar la dirección que posee la variable en la memoria, asi, podremos observar que nuestras tres variables poseen direcciones diferentes debido al alcance que posee cada una de ellas en donde existen sin ningun error de compilación.
+
+int add2(int a, int & c)
+{
+    int r = a + c;
+    std::cout << "Direccion de a local en addition copy: " << &a << std::endl;
+    std::cout << "Direccion de c local en addition ref : " << &c << std::endl; // Al revisar la dirección de nuestra variable & c tenemos que es la misma dirección de memoria que nuestra variable int b. Por lo cual ambas variables se encuentran refiriendose a un mismo espacio d ememoria y por lo tanto son iguales.
+    //c = -32; // Al realizar esta operación tanto el valor de c como de b cambiaraian, por lo cual es bueno colocar en la función principal un costante para que asi sea imposible que puedan modificarse.
+    return r;
+}
